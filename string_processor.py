@@ -1,4 +1,4 @@
-class StringProcessing:
+class StringProcessor:
     """
     An object for processing strings.  The main methods of interest are:
     * to_camel_case
@@ -24,9 +24,9 @@ class StringProcessing:
         Examples:
         >>> processor = StringProcessor()
         >>> processor.remove_whitespace("Hello There")
-        "HelloThere"
+        'HelloThere'
         >>> processor.remove_whitespace("HelloThere")
-        "HelloThere"
+        'HelloThere'
         """
         return "".join(name.split(" "))
 
@@ -70,9 +70,9 @@ class StringProcessing:
         Examples:
         >>> processor = StringProcessor()
         >>> processor.get_lower_case_words([0, 5], "HelloThere")
-        ["hello", "there"]
+        ['hello', 'there']
         >>> processor.get_lower_case_words([0, 5, 10], "HelloThereFriends")
-        >>> ["hello", "there", "friends"]
+        ['hello', 'there', 'friends']
         """
         start = 0
         lower_case_words = []
@@ -128,6 +128,8 @@ class StringProcessing:
         """
         name = self.remove_whitespace(name)
         upper_case_indices = self.get_upper_case_indices(name)
+        if upper_case_indices == []:
+            return name
         lower_case_words = self.get_lower_case_words(
             upper_case_indices, name
         )
@@ -158,7 +160,9 @@ class StringProcessing:
             return name.split("_")
         elif " " in name:
             return name.split(" ")
-    
+        else:
+            return [name]
+        
     def capitalize_words(self, words: list) -> list:
         """
         Takes in a list of words (strings) and
@@ -177,7 +181,13 @@ class StringProcessing:
         >>> processor.capitalize_words(['hello', 'there', 'friends'])
         ['Hello', 'There', 'Friends']
         """
-        return [word.capitalize() for word in words]
+        capitalized_words = []
+        for word in words:
+            if word:
+                capitalized_words.append(
+                    word.capitalize()
+                )
+        return capitalized_words
     
     def to_camel_case(self, name: str) -> str:
         """
@@ -198,7 +208,6 @@ class StringProcessing:
         >>> processor.to_camel_case('hello_there')
         'HelloThere'
         """
-        name = self.remove_whitespace(name)
         words = self.split(name)
-        words = capitalize_words(words)
+        words = self.capitalize_words(words)
         return "".join(words)
